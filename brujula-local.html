@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Brújula Vocacional</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap">
+<style>
+/* Layout: one calm column (max 640px), one task per screen, a 4-step trail on top. Compass motif. */
+:root{
+  --bg:#EFF2F7; --surface:#FFFFFF; --ink:#1B2232; --muted:#5B6477; --line:#DCE1EB;
+  --accent:#4A43C4; --accent-ink:#FFFFFF; --accent-soft:#E5E3FA;
+  --leaf:#2A8264; --leaf-soft:#DBF0E7; --sun:#B7791F; --sun-soft:#F8ECD6;
+  --display:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11141C; --surface:#1A1E29; --ink:#E8EBF2; --muted:#9AA2B4; --line:#2B3142;
+  --accent:#9F99FF; --accent-ink:#14122E; --accent-soft:#29274D;
+  --leaf:#5CC7A0; --leaf-soft:#16332A; --sun:#E3B060; --sun-soft:#3A2C14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11141C; --surface:#1A1E29; --ink:#E8EBF2; --muted:#9AA2B4; --line:#2B3142;
+  --accent:#9F99FF; --accent-ink:#14122E; --accent-soft:#29274D;
+  --leaf:#5CC7A0; --leaf-soft:#16332A; --sun:#E3B060; --sun-soft:#3A2C14; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(2rem,7vw,2.8rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:1.55rem;font-weight:700;letter-spacing:-.01em}
+h3{font-size:1.15rem;font-weight:700}
+p{margin:0}
+.muted{color:var(--muted)}
+.eyebrow{font-size:.78rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* top bar */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:1.1rem}
+.brand svg{width:30px;height:30px}
+.trail{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.trail div{display:flex;flex-direction:column;gap:6px;font-size:.74rem;color:var(--muted);min-width:0}
+.trail i{display:block;height:6px;border-radius:6px;background:var(--line)}
+.trail .done i{background:var(--leaf)} .trail .now i{background:var(--accent)} .trail .now{color:var(--ink);font-weight:700}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.soft{background:var(--accent-soft);border-radius:var(--r);padding:18px}
+.calm{background:var(--leaf-soft);border-radius:var(--r);padding:16px 18px}
+
+button{font:inherit;cursor:pointer;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:12px 18px;min-height:48px}
+button:focus-visible, input:focus-visible, textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+.ghost{background:transparent;border-color:transparent;color:var(--muted);padding-inline:8px}
+.ghost:hover{color:var(--ink)}
+.small{min-height:38px;padding:8px 14px;font-size:.92rem}
+.spread{justify-content:space-between}
+
+/* modules overview */
+.mods{display:grid;gap:10px}
+.mod{display:grid;grid-template-columns:36px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.mod:first-child{border-top:0}
+.mod b{font-family:var(--display);font-size:1.3rem;color:var(--accent);text-align:center}
+.mod span.t{font-size:.85rem;color:var(--muted);white-space:nowrap}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:40px;padding:8px 14px;border-radius:999px;font-size:.95rem}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--ink);font-weight:700}
+.chip.hard[aria-pressed="true"]{background:var(--sun-soft);border-color:var(--sun)}
+input[type=text], textarea{font:inherit;width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+textarea{min-height:90px;resize:vertical}
+label.lbl{font-weight:700;font-size:.95rem}
+
+/* question card */
+.q{text-align:center;padding-block:34px 26px}
+.q .n{font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.q h2{font-size:clamp(1.45rem,5.5vw,1.9rem);margin:14px auto 6px;max-width:22ch}
+.tag{display:inline-block;font-size:.75rem;padding:3px 10px;border-radius:999px;background:var(--leaf-soft);color:var(--leaf);font-weight:700}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:22px}
+.scale button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 2px;min-width:0}
+.scale .f{font-size:1.8rem;line-height:1}
+.scale .l{font-size:.7rem;color:var(--muted);line-height:1.2}
+.scale button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.bar{height:8px;border-radius:8px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:8px;transition:width .3s}
+
+/* prefs */
+.opt{display:grid;gap:8px}
+.opt button{text-align:left}
+.opt button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);font-weight:700}
+
+/* results */
+.code{display:flex;gap:10px;justify-content:center;margin:6px 0 4px}
+.code span{font-family:var(--display);font-weight:800;font-size:2.6rem;width:64px;height:72px;display:grid;place-items:center;border-radius:14px;background:var(--accent-soft);color:var(--accent)}
+.code span:first-child{background:var(--accent);color:var(--accent-ink)}
+.radar{width:100%;max-width:380px;margin:0 auto;display:block}
+.radar text{fill:var(--muted);font-family:var(--body);font-size:12px}
+.radar text.v{fill:var(--ink);font-weight:700}
+.type{display:grid;grid-template-columns:44px 1fr;gap:14px;padding:16px 0;border-top:1px solid var(--line)}
+.type:first-of-type{border-top:0}
+.type .L{font-family:var(--display);font-weight:800;font-size:1.5rem;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.meter{display:grid;grid-template-columns:1fr 44px;gap:10px;align-items:center;font-variant-numeric:tabular-nums;font-size:.9rem}
+.meter .bar i{background:var(--leaf)}
+.role{display:flex;flex-direction:column;gap:6px;padding:16px;border:1px solid var(--line);border-radius:12px}
+.role .step{font-size:.95rem;border-left:3px solid var(--leaf);padding-left:10px}
+ul.clean{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:6px}
+.sample{background:var(--sun-soft);color:var(--ink);border-radius:12px;padding:10px 14px;font-size:.92rem}
+.confirm{border:1px solid var(--sun);background:var(--sun-soft);border-radius:12px;padding:14px}
+.toast{font-size:.9rem;color:var(--leaf);font-weight:700}
+.fade{animation:fade .35s ease both}
+@keyframes fade{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.fade{animation:none}.bar i{transition:none}}
+@media (max-width:420px){.card{padding:18px}.scale{gap:5px}.scale .l{font-size:.62rem}.code span{width:54px;height:62px;font-size:2.2rem}}
+</style>
+</head>
+<body>
+
+<div class="wrap" id="app"></div>
+
+<script>
+(function(){
+const KEY="brujula-v1";
+const TYPES={
+  R:{name:"Realista",short:"Hacer con las manos",desc:"Te atraen las tareas concretas, donde se ve el resultado: armar, reparar, cultivar, cocinar.",ideas:["Técnica en reparación de PC","Viverismo, huerta o jardinería","Ayudante de cocina","Electrónica básica (Arduino)"]},
+  I:{name:"Investigadora",short:"Entender y resolver",desc:"Disfrutás pensar, analizar y descubrir cómo funcionan las cosas. Te gustan los problemas con lógica.",ideas:["Programación (web o videojuegos)","Análisis de datos inicial","Testing técnico de software","Asistente de laboratorio"]},
+  A:{name:"Artística",short:"Crear y expresar",desc:"Te motiva crear algo propio: imágenes, historias, música o mundos. Necesitás espacio para la imaginación.",ideas:["Ilustración digital o pixel art","Diseño gráfico","Edición de video","Escritura creativa o guion"]},
+  S:{name:"Social",short:"Acompañar y enseñar",desc:"Te sale natural explicar, escuchar y ayudar. Te hace bien sentir que tu trabajo sirve a otras personas.",ideas:["Apoyo escolar (por ejemplo, matemática)","Talleres para chicos","Acompañamiento de personas mayores","Moderación de comunidades online"]},
+  E:{name:"Emprendedora",short:"Proponer y mover",desc:"Te entusiasma llevar adelante ideas, convencer y organizar a otros hacia una meta.",ideas:["Emprendimiento online","Marketing en redes","Coordinación de proyectos","Ventas"]},
+  C:{name:"Organizadora",short:"Ordenar con precisión",desc:"Te sentís cómoda con tareas claras, ordenadas y detallistas. Encontrar errores te resulta satisfactorio.",ideas:["Testing de videojuegos (QA)","Administración y carga de datos","Asistente contable","Corrección de textos"]}
+};
+const ORDER=["R","I","A","S","E","C"];
+const ROLES={
+  prog:{name:"Programación de juegos",desc:"Hacés que las cosas funcionen: movimiento, reglas, colisiones.",step:"Seguí un tutorial de juego 2D en Godot (es gratis) durante una tarde."},
+  arte:{name:"Arte y animación",desc:"Dibujás personajes, escenarios e íconos que le dan identidad al juego.",step:"Dibujá un personaje en pixel art con Piskel o Krita (ambos gratis)."},
+  narr:{name:"Narrativa y guion",desc:"Escribís la historia, los personajes y los diálogos.",step:"Escribí una historia interactiva corta en Twine (gratis, se usa desde el navegador)."},
+  diseno:{name:"Diseño de juego y niveles",desc:"Inventás las reglas, los desafíos y cómo se recorre cada nivel.",step:"Diseñá un nivel en papel, con obstáculos y una meta, y probalo con alguien."},
+  sonido:{name:"Música y sonido",desc:"Creás la música y los efectos que hacen que el juego se sienta vivo.",step:"Probá hacer una melodía corta en LMMS o efectos en jsfxr (gratis)."},
+  qa:{name:"Testing (QA)",desc:"Jugás buscando errores y los reportás con orden. Suele ser una puerta de entrada a la industria.",step:"Jugá un juego indie gratuito de itch.io y escribí un reporte de errores prolijo."},
+  comunidad:{name:"Comunidad y difusión",desc:"Cuidás a los jugadores, moderás espacios y contás novedades del juego.",step:"Sumate como ayudante en el Discord de un juego o grupo que te guste."},
+  prod:{name:"Producción",desc:"Organizás tareas, tiempos y al equipo para que el juego se termine.",step:"Participá de una game jam online (como la Global Game Jam) armando la lista de tareas del grupo."}
+};
+const ITEMS_BY={
+  R:[["Armar o reparar una computadora"],["Cuidar una huerta o plantas en un vivero"],["Construir un mueble o una maqueta"],["Cuidar animales"],["Armar un robot simple con Arduino","prog"],["Cocinar en una cocina profesional"]],
+  I:[["Programar cómo salta un personaje de videojuego","prog"],["Resolver acertijos de lógica","diseno"],["Investigar por qué se enferma una planta"],["Analizar datos para encontrar patrones"],["Calcular cómo rebota una pelota en un juego","prog"],["Leer sobre ciencia o el espacio"]],
+  A:[["Dibujar personajes para un videojuego","arte"],["Escribir la historia y los diálogos de un juego","narr"],["Componer música para un juego","sonido"],["Diseñar los niveles o el mapa de un juego","diseno"],["Sacar fotos o editar videos","arte"],["Decorar o diseñar un espacio"]],
+  S:[["Explicarle matemática a un chico"],["Moderar una comunidad de jugadores en Discord","comunidad"],["Escuchar a alguien que tiene un problema"],["Dar un taller sobre algo que sabés"],["Acompañar a personas mayores"],["Organizar juegos para chicos"]],
+  E:[["Vender un producto propio por internet"],["Coordinar a un equipo en una game jam","prod"],["Convencer a otros de una idea"],["Llevar adelante un emprendimiento propio"],["Promocionar un juego en redes sociales","comunidad"],["Organizar un evento"]],
+  C:[["Probar un juego y anotar cada error que encontrás","qa"],["Llevar las cuentas de un pequeño negocio"],["Ordenar archivos o una base de datos"],["Seguir un procedimiento paso a paso"],["Cargar datos en una planilla"],["Revisar textos buscando errores","qa"]]
+};
+const ITEMS=[];
+for(let i=0;i<6;i++) ORDER.forEach(t=>{const it=ITEMS_BY[t][i];ITEMS.push({t:it[0],type:t,role:it[1]||null})});
+const FACES=[["😣","No me gusta nada"],["🙁","No me gusta"],["😐","Me da igual"],["🙂","Me gusta"],["😄","Me encanta"]];
+const LIKED=[["Estar al aire libre, con la tierra","R"],["Entender cómo funcionan las cosas","I"],["Resolver problemas con números o lógica","I"],["Explicar y enseñar","S"],["Los compañeros, el grupo","S"],["Ordenar datos, cuentas o registros","C"],["Pensar en negocios o proyectos","E"],["Crear o diseñar algo propio","A"]];
+const HARD=[["Muchas horas de cursada","Conviene empezar por formatos cortos o de pocas horas por semana."],["Exámenes y presión","Buscá propuestas que evalúen con proyectos o práctica, no solo con exámenes."],["El contenido no me interesaba","Por eso este test busca qué sí te interesa antes de elegir."],["El ambiente o el grupo","Fijate en el tipo de equipo que preferís (está en tus condiciones de trabajo)."],["Mi momento personal o de salud","Avanzar a tu ritmo y con tu equipo de apoyo es parte del plan, no un atraso."],["Distancia o traslados","Las opciones remotas o cerca de casa pueden hacerlo más fácil."]];
+const PREFS=[
+  {id:"amb",q:"¿Qué ambiente te resulta más cómodo?",o:["Tranquilo y silencioso","Con algo de movimiento","Me da igual"]},
+  {id:"gente",q:"¿Con cuántas personas te gustaría trabajar?",o:["Sola, a mi ritmo","Con un grupo chico","Con mucha gente"]},
+  {id:"lugar",q:"¿Dónde te imaginás trabajando o estudiando?",o:["Desde casa","En un lugar presencial","Un poco de cada uno"]},
+  {id:"horas",q:"¿Cuántas horas por día te parecen bien para empezar?",o:["2 a 4 horas","4 a 6 horas","Jornada completa","Todavía no sé"]},
+  {id:"ritmo",q:"¿Qué tipo de tareas preferís?",o:["Claras y parecidas cada día","Variadas","Una mezcla"]},
+  {id:"paso",q:"¿Cuál te gustaría que fuera tu primer paso?",o:["Estudiar algo corto","Conseguir un trabajo","Las dos cosas","No sé todavía"]}
+];
+const ATTRACT=[["Crear mundos y reglas","diseno"],["Las historias","narr"],["El arte y los personajes","arte"],["Programar cómo funciona","prog"],["La música y el sonido","sonido"],["Encontrar detalles y errores","qa"],["La comunidad de jugadores","comunidad"],["Organizar al equipo","prod"]];
+const STEPS=["Lo que probé","Actividades","Mi forma","Resultado"];
+
+function fresh(){return{name:"",step:"intro",careers:[{n:"Ingeniería agrónoma",liked:[],hard:[]},{n:"Profesorado de matemática",liked:[],hard:[]},{n:"Contador público",liked:[],hard:[]}],ans:{},qi:0,prefs:{},attract:[],notes:""}}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.step)return Object.assign(fresh(),s)}catch(e){}return fresh()}
+let S=load(); let sample=null; let confirmReset=false;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const app=document.getElementById("app");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function go(step){S.step=step;save();render();window.scrollTo({top:0,behavior:"smooth"})}
+
+const compass=`<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="none" stroke="var(--accent)" stroke-width="2.5"/><path d="M16 6 L20 16 L16 26 L12 16Z" fill="var(--accent)"/><path d="M16 16 L20 16 L16 26Z" fill="var(--leaf)"/></svg>`;
+function header(idx){
+  const trail=idx<0?"":`<div class="trail" aria-label="Progreso">${STEPS.map((s,i)=>`<div class="${i<idx?"done":i===idx?"now":""}"><i></i>${s}</div>`).join("")}</div>`;
+  const pause=(idx>=0&&idx<3)?`<button class="ghost small" data-a="pause">Tomar un respiro</button>`:"";
+  return `<div class="top"><div class="brand">${compass}Brújula</div>${pause}</div>${trail}`;
+}
+
+function vIntro(){
+  const started=Object.keys(S.ans).length>0||S.step!=="intro"&&S.step!=="break";
+  const resume=S._resume;
+  return header(-1)+`<div class="stack fade">
+    <p class="eyebrow">Test vocacional a tu ritmo</p>
+    <h1>Una brújula para tu próximo paso</h1>
+    <p class="muted">No hay respuestas buenas ni malas, y no es un examen. Vamos a mirar lo que ya viviste, lo que te gusta hacer y cómo te sentís cómoda trabajando. Podés pausar cuando quieras: tu avance queda guardado en este dispositivo.</p>
+  </div>
+  <div class="card mods">
+    <div class="mod"><b>1</b><div><h3>Lo que ya probé</h3><p class="muted">Qué te gustó y qué no de las carreras que empezaste.</p></div><span class="t">5 min</span></div>
+    <div class="mod"><b>2</b><div><h3>Actividades</h3><p class="muted">36 actividades cortas. Respondés con caritas.</p></div><span class="t">10 min</span></div>
+    <div class="mod"><b>3</b><div><h3>Mi forma de trabajar</h3><p class="muted">Ambiente, horarios y qué te atrae de los videojuegos.</p></div><span class="t">5 min</span></div>
+    <div class="mod"><b>4</b><div><h3>Tu resultado</h3><p class="muted">Tu código de 3 letras, roles en videojuegos y primeros pasos.</p></div><span class="t">Al final</span></div>
+  </div>
+  <div class="stack">
+    <label class="lbl" for="nm">¿Cómo te llamás? <span class="muted">(opcional)</span></label>
+    <input type="text" id="nm" value="${esc(S.name)}" placeholder="Tu nombre">
+  </div>
+  <div class="row">
+    ${resume?`<button class="primary" data-a="resume">Seguir donde dejé</button><button data-a="askreset">Empezar de cero</button>`:`<button class="primary" data-a="start">Empezar</button>`}
+    <button class="ghost" data-a="sample">Ver un resultado de ejemplo</button>
+  </div>
+  ${confirmReset?confirmBox():""}
+  <p class="muted" style="font-size:.88rem">Basado en el modelo RIASEC de Holland, el mismo que usa el O*NET Interest Profiler. Es una herramienta de orientación: sirve como punto de partida para conversar con tu familia y tu equipo de salud, no reemplaza una orientación profesional.</p>`;
+}
+function confirmBox(){return `<div class="confirm stack"><p><b>¿Borrar tus respuestas y empezar de nuevo?</b> No se puede deshacer.</p><div class="row"><button class="primary small" data-a="doreset">Sí, empezar de cero</button><button class="small" data-a="noreset">Cancelar</button></div></div>`}
+
+function vBreak(){
+  return header(-1)+`<div class="card stack fade" style="text-align:center;padding-block:40px">
+    <h2>Tu avance quedó guardado</h2>
+    <p class="muted">Tomate el tiempo que necesites. Cuando vuelvas a abrir esta página, vas a poder seguir exactamente donde dejaste.</p>
+    <div class="row" style="justify-content:center"><button class="primary" data-a="resume">Seguir ahora</button></div>
+  </div>`;
+}
+
+function vM1(){
+  return header(0)+`<div class="stack fade">
+    <p class="eyebrow">Parte 1 de 3</p>
+    <h2>Lo que ya probé</h2>
+    <p class="muted">Cada carrera que empezaste dejó pistas. Marcá lo que disfrutabas y lo que se hizo difícil. Si alguna no aplica, dejala en blanco.</p>
+  </div>
+  ${S.careers.map((c,i)=>`<div class="card stack">
+    <div class="row spread"><input type="text" aria-label="Nombre de la carrera" id="cn${i}" data-cn="${i}" value="${esc(c.n)}" style="font-weight:700;flex:1;min-width:0">${S.careers.length>1?`<button class="ghost small" data-rm="${i}" aria-label="Quitar">Quitar</button>`:""}</div>
+    <p class="lbl">Lo que me gustaba</p>
+    <div class="chips">${LIKED.map((l,j)=>`<button class="chip" data-like="${i}:${j}" aria-pressed="${c.liked.includes(j)}">${l[0]}</button>`).join("")}</div>
+    <p class="lbl">Lo que se hizo difícil</p>
+    <div class="chips">${HARD.map((h,j)=>`<button class="chip hard" data-hard="${i}:${j}" aria-pressed="${c.hard.includes(j)}">${h[0]}</button>`).join("")}</div>
+  </div>`).join("")}
+  <button data-a="addc">+ Agregar otra carrera o experiencia</button>
+  <div class="calm"><p>Dejar una carrera no es fracasar: es información sobre lo que no encajaba. Eso también nos ayuda.</p></div>
+  <div class="row spread"><button class="ghost" data-a="home">Volver</button><button class="primary" data-a="toM2">Seguir a actividades</button></div>`;
+}
+
+function vM2(){
+  const it=ITEMS[S.qi]; const a=S.ans[S.qi];
+  const done=Object.keys(S.ans).length;
+  return header(1)+`<div class="stack">
+    <div class="row spread"><p class="eyebrow">Parte 2 de 3 · ¿Cuánto te gustaría hacer esto?</p></div>
+    <div class="bar" aria-hidden="true"><i style="width:${done/ITEMS.length*100}%"></i></div>
+  </div>
+  <div class="card q fade" id="qcard">
+    <p class="n">${S.qi+1} de ${ITEMS.length}</p>
+    <h2>${esc(it.t)}</h2>
+    ${it.role?`<span class="tag">Videojuegos</span>`:`<span class="tag" style="visibility:hidden">·</span>`}
+    <div class="scale" role="group" aria-label="Tu respuesta">
+      ${FACES.map((f,v)=>`<button data-ans="${v+1}" aria-pressed="${a===v+1}" aria-label="${f[1]}"><span class="f">${f[0]}</span><span class="l">${f[1]}</span></button>`).join("")}
+    </div>
+  </div>
+  <p class="muted" style="text-align:center;font-size:.9rem">Pensá si te gustaría hacerlo, no si sabés hacerlo. Podés usar las teclas 1 a 5.</p>
+  <div class="row spread"><button class="ghost" data-a="prevq">Anterior</button>${a?`<button data-a="nextq">Siguiente</button>`:""}</div>`;
+}
+
+function vM3(){
+  return header(2)+`<div class="stack fade">
+    <p class="eyebrow">Parte 3 de 3</p>
+    <h2>Mi forma de trabajar</h2>
+    <p class="muted">No hay respuestas mejores. Esto sirve para elegir propuestas que te queden cómodas.</p>
+  </div>
+  ${PREFS.map(p=>`<div class="card stack"><h3>${p.q}</h3><div class="opt">${p.o.map((o,j)=>`<button data-pref="${p.id}:${j}" aria-pressed="${S.prefs[p.id]===j}">${o}</button>`).join("")}</div></div>`).join("")}
+  <div class="card stack"><h3>¿Qué te atrae de los videojuegos?</h3><p class="muted">Podés marcar varias.</p>
+    <div class="chips">${ATTRACT.map((x,j)=>`<button class="chip" data-att="${j}" aria-pressed="${S.attract.includes(j)}">${x[0]}</button>`).join("")}</div></div>
+  <div class="card stack"><label class="lbl" for="notes">¿Algo más que quieras anotar?</label>
+    <textarea id="notes" placeholder="Por ejemplo: algo que siempre te gustó, o algo que preferís evitar.">${esc(S.notes)}</textarea></div>
+  <div class="row spread"><button class="ghost" data-a="toM2back">Volver</button><button class="primary" data-a="toRes">Ver mi resultado</button></div>`;
+}
+
+function compute(st){
+  const raw={},max={};
+  ORDER.forEach(t=>{raw[t]=0;max[t]=24});
+  ITEMS.forEach((it,i)=>{const v=st.ans[i];if(v)raw[it.type]+=v-1});
+  st.careers.forEach(c=>c.liked.forEach(j=>{raw[LIKED[j][1]]+=2;}));
+  st.careers.forEach(c=>c.liked.forEach(j=>{max[LIKED[j][1]]+=0}));
+  const extra={};ORDER.forEach(t=>extra[t]=0);
+  st.careers.forEach(c=>c.liked.forEach(j=>extra[LIKED[j][1]]+=2));
+  const pct={};ORDER.forEach(t=>pct[t]=Math.min(100,Math.round(raw[t]/(24+Math.max(4,extra[t]))*100)));
+  const sorted=[...ORDER].sort((a,b)=>pct[b]-pct[a]||ORDER.indexOf(a)-ORDER.indexOf(b));
+  const roles={};Object.keys(ROLES).forEach(r=>{let s=0,n=0;ITEMS.forEach((it,i)=>{if(it.role===r){n++;s+=(st.ans[i]||1)-1}});const at=st.attract.some(j=>ATTRACT[j][1]===r)?1:0;roles[r]=Math.round((s+at*3)/(n*4+3)*100)});
+  const rs=Object.keys(roles).sort((a,b)=>roles[b]-roles[a]);
+  const liked={};st.careers.forEach(c=>c.liked.forEach(j=>liked[j]=(liked[j]||0)+1));
+  const hard={};st.careers.forEach(c=>c.hard.forEach(j=>hard[j]=(hard[j]||0)+1));
+  return{pct,code:sorted.slice(0,3),sorted,roles,rs,liked,hard};
+}
+
+function radar(pct){
+  const cx=170,cy=150,R=105;
+  const ang=i=>-Math.PI/2+i*Math.PI/3;
+  const pt=(i,r)=>[cx+Math.cos(ang(i))*r,cy+Math.sin(ang(i))*r];
+  let g="";
+  [25,50,75,100].forEach(l=>{g+=`<polygon points="${ORDER.map((_,i)=>pt(i,R*l/100).join(",")).join(" ")}" fill="none" stroke="var(--line)" stroke-width="1"/>`});
+  ORDER.forEach((_,i)=>{const p=pt(i,R);g+=`<line x1="${cx}" y1="${cy}" x2="${p[0]}" y2="${p[1]}" stroke="var(--line)"/>`});
+  const poly=ORDER.map((t,i)=>pt(i,R*pct[t]/100).join(",")).join(" ");
+  g+=`<polygon points="${poly}" fill="var(--accent)" fill-opacity=".22" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>`;
+  ORDER.forEach((t,i)=>{const p=pt(i,R*pct[t]/100);g+=`<circle cx="${p[0]}" cy="${p[1]}" r="4.5" fill="var(--accent)"/>`});
+  ORDER.forEach((t,i)=>{const p=pt(i,R+26);const anchor=Math.abs(p[0]-cx)<5?"middle":p[0]>cx?"start":"end";const dx=anchor==="start"?-8:anchor==="end"?8:0;
+    g+=`<text x="${p[0]+dx}" y="${p[1]-2}" text-anchor="${anchor}">${TYPES[t].name}</text><text class="v" x="${p[0]+dx}" y="${p[1]+13}" text-anchor="${anchor}">${pct[t]}%</text>`});
+  g+=`<text x="${cx+4}" y="${cy-R*0.5-3}" style="font-size:10px">50</text>`;
+  return `<svg class="radar" viewBox="0 0 340 300" role="img" aria-label="Gráfico de tus intereses">${g}</svg>`;
+}
+
+function prefSummary(st){
+  return PREFS.filter(p=>st.prefs[p.id]!==undefined).map(p=>`<li><span class="muted">${p.q.replace(/[¿?]/g,"")}:</span> <b>${p.o[st.prefs[p.id]]}</b></li>`).join("");
+}
+
+function vResult(st,isSample){
+  const r=compute(st); const nm=st.name?`, ${esc(st.name)}`:"";
+  const top=r.code.map(t=>TYPES[t]);
+  const ideas=[...new Set(r.code.slice(0,2).flatMap(t=>TYPES[t].ideas.slice(0,3)))];
+  const hardList=Object.keys(r.hard).sort((a,b)=>r.hard[b]-r.hard[a]);
+  const likedList=Object.keys(r.liked).sort((a,b)=>r.liked[b]-r.liked[a]);
+  const remote=st.prefs.lugar===0, shortH=st.prefs.horas===0;
+  return header(isSample?-1:3)+`${isSample?`<div class="sample row spread"><span>Estás viendo un <b>resultado de ejemplo</b> con respuestas inventadas.</span><button class="small" data-a="closesample">Volver al inicio</button></div>`:""}
+  <div class="card stack fade" style="text-align:center">
+    <p class="eyebrow">Tu código vocacional</p>
+    <div class="code" aria-label="Código ${r.code.join("")}">${r.code.map(t=>`<span>${t}</span>`).join("")}</div>
+    <h2>${top.map(t=>t.name).join(" · ")}</h2>
+    <p class="muted">Listo${nm}. Tus intereses más fuertes son <b>${top[0].short.toLowerCase()}</b> y <b>${top[1].short.toLowerCase()}</b>. No es una etiqueta fija: muestra hacia dónde apunta tu brújula hoy.</p>
+    ${radar(r.pct)}
+  </div>
+
+  <div class="card"><h3 style="margin-bottom:6px">Tus tres intereses principales</h3>
+    ${r.code.map(t=>`<div class="type"><div class="L">${t}</div><div class="stack" style="gap:8px;min-width:0"><div><b>${TYPES[t].name}</b> <span class="muted">· ${TYPES[t].short}</span></div><div class="meter"><div class="bar"><i style="width:${r.pct[t]}%"></i></div><span>${r.pct[t]}%</span></div><p class="muted">${TYPES[t].desc}</p></div></div>`).join("")}
+  </div>
+
+  <div class="card stack"><div><p class="eyebrow">Videojuegos</p><h3>Los roles que más te encajan</h3></div>
+    <p class="muted">Hacer un videojuego necesita muchas personas distintas. Según tus respuestas, estos tres roles son los que más se parecen a vos:</p>
+    ${r.rs.slice(0,3).map(k=>`<div class="role"><div class="row spread"><b>${ROLES[k].name}</b><span class="tag">${r.roles[k]}%</span></div><p class="muted">${ROLES[k].desc}</p><p class="step"><b>Para probar:</b> ${ROLES[k].step}</p></div>`).join("")}
+  </div>
+
+  <div class="card stack"><div><p class="eyebrow">Fuera de los videojuegos</p><h3>Caminos para explorar</h3></div>
+    <ul class="clean">${ideas.map(i=>`<li>${i}</li>`).join("")}</ul>
+    <p class="muted" style="font-size:.93rem">${remote?"Como preferís trabajar desde casa, priorizá las opciones que se pueden hacer de forma remota. ":""}${shortH?"Empezar con pocas horas está perfecto: un curso corto o un trabajo de medio tiempo es un muy buen primer paso.":"Probá primero algo corto para ver cómo te sentís, antes de comprometerte a algo largo."}</p>
+  </div>
+
+  <div class="soft stack"><h3>Tu plan de un mes</h3>
+    <ul class="clean">
+      <li><b>Semana 1:</b> ${ROLES[r.rs[0]].step}</li>
+      <li><b>Semana 2:</b> buscá un curso corto y gratuito sobre ${TYPES[r.code[0]].ideas[0].toLowerCase()}.</li>
+      <li><b>Semana 3:</b> ${ROLES[r.rs[1]].step}</li>
+      <li><b>Semana 4:</b> conversá con tu equipo qué disfrutaste y qué te costó, y elegí cómo seguir.</li>
+    </ul>
+    <p class="muted" style="font-size:.9rem">Lo importante es probar en pequeño. Si algo no te gusta, también es un dato útil.</p>
+  </div>
+
+  ${likedList.length||hardList.length?`<div class="card stack"><h3>Lo que aprendiste de tus experiencias</h3>
+    ${likedList.length?`<p><b>Lo que se repite como disfrute:</b> ${likedList.slice(0,3).map(j=>LIKED[j][0].toLowerCase()).join(", ")}.</p>`:""}
+    ${hardList.length?`<div class="stack" style="gap:8px">${hardList.slice(0,3).map(j=>`<p class="step" style="border-left:3px solid var(--sun);padding-left:10px"><b>${HARD[j][0]}.</b> ${HARD[j][1]}</p>`).join("")}</div>`:""}
+  </div>`:""}
+
+  ${prefSummary(st)?`<div class="card stack"><h3>Para conversar con tu equipo</h3><p class="muted">Tus condiciones de trabajo preferidas, para compartir con tu familia, tu terapeuta o tu psiquiatra:</p><ul class="clean">${prefSummary(st)}</ul>${st.notes?`<p><span class="muted">Tus notas:</span> ${esc(st.notes)}</p>`:""}</div>`:""}
+
+  <div class="row">${isSample?"":`<button class="primary" data-a="copy">Copiar resumen</button><button data-a="toM3back">Cambiar respuestas</button><button class="ghost" data-a="askreset">Empezar de cero</button>`}</div>
+  <p class="toast" id="toast" hidden></p>
+  ${confirmReset?confirmBox():""}
+  <textarea id="copytext" hidden readonly></textarea>
+  <p class="muted" style="font-size:.86rem">Este resultado es orientativo. Basado en el modelo RIASEC de Holland. No mide capacidades ni salud: muestra intereses de hoy, que pueden cambiar.</p>`;
+}
+
+function summaryText(st){
+  const r=compute(st);
+  return [`Brújula Vocacional${st.name?" — "+st.name:""}`,`Código: ${r.code.join("")} (${r.code.map(t=>TYPES[t].name).join(", ")})`,
+    `Intereses: ${ORDER.map(t=>TYPES[t].name+" "+r.pct[t]+"%").join(" · ")}`,
+    `Roles en videojuegos: ${r.rs.slice(0,3).map(k=>ROLES[k].name).join(", ")}`,
+    `Condiciones: ${PREFS.filter(p=>st.prefs[p.id]!==undefined).map(p=>p.o[st.prefs[p.id]]).join(", ")}`,
+    st.notes?`Notas: ${st.notes}`:""].filter(Boolean).join("\n");
+}
+
+function makeSample(){
+  const s=fresh();s.name="Ejemplo";s.step="result";
+  const pattern={R:[2,3,2,3,3,2],I:[5,4,3,4,4,3],A:[5,4,3,5,4,2],S:[3,2,4,2,2,3],E:[2,3,2,2,3,2],C:[5,2,3,4,2,4]};
+  const idx={R:0,I:0,A:0,S:0,E:0,C:0};
+  ITEMS.forEach((it,i)=>{s.ans[i]=pattern[it.type][idx[it.type]++]});
+  s.careers[0].liked=[0,1];s.careers[0].hard=[0];s.careers[1].liked=[2,3];s.careers[1].hard=[1];s.careers[2].liked=[5];s.careers[2].hard=[2,1];
+  s.prefs={amb:0,gente:1,lugar:0,horas:0,ritmo:2,paso:2};s.attract=[0,2,3];
+  return s;
+}
+
+function render(){
+  let h;
+  if(sample) h=vResult(sample,true);
+  else if(S.step==="intro") h=vIntro();
+  else if(S.step==="break") h=vBreak();
+  else if(S.step==="m1") h=vM1();
+  else if(S.step==="m2") h=vM2();
+  else if(S.step==="m3") h=vM3();
+  else h=vResult(S,false);
+  app.innerHTML=h;
+}
+
+app.addEventListener("input",e=>{
+  const t=e.target;
+  if(t.id==="nm"){S.name=t.value;save()}
+  if(t.dataset.cn!==undefined){S.careers[+t.dataset.cn].n=t.value;save()}
+  if(t.id==="notes"){S.notes=t.value;save()}
+});
+app.addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  const d=b.dataset;
+  if(d.like||d.hard){const [i,j]=(d.like||d.hard).split(":").map(Number);const arr=S.careers[i][d.like?"liked":"hard"];const k=arr.indexOf(j);k<0?arr.push(j):arr.splice(k,1);b.setAttribute("aria-pressed",k<0);save();return}
+  if(d.rm!==undefined){S.careers.splice(+d.rm,1);save();render();return}
+  if(d.ans){S.ans[S.qi]=+d.ans;save();answerNext();return}
+  if(d.pref){const [id,j]=d.pref.split(":");S.prefs[id]=+j;save();b.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));return}
+  if(d.att!==undefined){const j=+d.att,k=S.attract.indexOf(j);k<0?S.attract.push(j):S.attract.splice(k,1);b.setAttribute("aria-pressed",k<0);save();return}
+  const a=d.a;
+  if(a==="start"){go("m1")}
+  else if(a==="resume"){go(S._resume||"m1")}
+  else if(a==="pause"){S._resume=S.step;go("break")}
+  else if(a==="home"){S._resume=S.step;go("intro")}
+  else if(a==="addc"){S.careers.push({n:"Otra experiencia",liked:[],hard:[]});save();render()}
+  else if(a==="toM2"){S._resume="m2";go("m2")}
+  else if(a==="prevq"){if(S.qi>0){S.qi--;save();render()}else go("m1")}
+  else if(a==="nextq"){answerNext(true)}
+  else if(a==="toM2back"){S.qi=ITEMS.length-1;go("m2")}
+  else if(a==="toM3back"){go("m3")}
+  else if(a==="toRes"){S._resume="result";go("result")}
+  else if(a==="sample"){sample=makeSample();render();window.scrollTo({top:0})}
+  else if(a==="closesample"){sample=null;render();window.scrollTo({top:0})}
+  else if(a==="askreset"){confirmReset=true;render()}
+  else if(a==="noreset"){confirmReset=false;render()}
+  else if(a==="doreset"){confirmReset=false;S=fresh();save();render()}
+  else if(a==="copy"){const txt=summaryText(S);const toast=document.getElementById("toast");
+    const fallback=()=>{const ta=document.getElementById("copytext");ta.hidden=false;ta.value=txt;ta.select();toast.hidden=false;toast.textContent="Seleccioná el texto de arriba y copialo."};
+    try{navigator.clipboard.writeText(txt).then(()=>{toast.hidden=false;toast.textContent="Resumen copiado. Podés pegarlo en un mensaje."},fallback)}catch(err){fallback()}}
+});
+let advancing=false;
+function answerNext(manual){
+  if(advancing)return;
+  if(S.qi<ITEMS.length-1){
+    if(manual){S.qi++;save();render();return}
+    advancing=true;render();
+    setTimeout(()=>{S.qi++;save();advancing=false;render()},260);
+  } else { S._resume="m3"; go("m3"); }
+}
+document.addEventListener("keydown",e=>{
+  if(sample||S.step!=="m2")return; if(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA")return;
+  const n=+e.key; if(n>=1&&n<=5){S.ans[S.qi]=n;save();answerNext()}
+  if(e.key==="ArrowLeft"&&S.qi>0){S.qi--;save();render()}
+  if(e.key==="ArrowRight"&&S.ans[S.qi]){answerNext(true)}
+});
+if(S.step!=="intro"&&S.step!=="break"){S._resume=S.step;S.step="intro"}
+render();
+})();
+</script>
+</body>
+</html>
