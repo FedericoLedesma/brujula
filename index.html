@@ -134,12 +134,12 @@ ul.clean{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:6px}
 (function(){
 const KEY="brujula-v2";
 const TYPES={
-  R:{name:"Realista",short:"Hacer con las manos",desc:"Te atraen las tareas concretas, donde se ve el resultado: armar, reparar, cultivar, cocinar, moverte.",ideas:["Técnica en reparación de PC","Viverismo, huerta o jardinería","Ayudante de cocina","Asistente veterinaria"]},
-  I:{name:"Investigadora",short:"Entender y resolver",desc:"Disfrutás pensar, analizar y descubrir cómo funcionan las cosas. Te gustan los problemas con lógica.",ideas:["Programación","Análisis de datos","Asistente de laboratorio","Carreras de ciencias"]},
-  A:{name:"Artística",short:"Crear y expresar",desc:"Te motiva crear algo propio: imágenes, historias, música, objetos o mundos. Necesitás espacio para la imaginación.",ideas:["Diseño gráfico","Ilustración digital","Fotografía o edición de video","Escritura creativa"]},
-  S:{name:"Social",short:"Acompañar y enseñar",desc:"Te sale natural explicar, escuchar y ayudar. Te hace bien sentir que tu trabajo sirve a otras personas.",ideas:["Apoyo escolar","Acompañamiento terapéutico","Talleres para chicos","Atención al público"]},
-  E:{name:"Emprendedora",short:"Proponer y mover",desc:"Te entusiasma llevar adelante ideas, convencer y organizar a otros hacia una meta.",ideas:["Emprendimiento propio","Marketing en redes","Ventas","Organización de eventos"]},
-  C:{name:"Organizadora",short:"Ordenar con precisión",desc:"Te sentís cómoda con tareas claras, ordenadas y detallistas. Encontrar errores te resulta satisfactorio.",ideas:["Administración","Asistente contable","Carga y control de datos","Corrección de textos"]}
+  R:{name:"Hacer",short:"Hacer con las manos",desc:"Te atraen las tareas concretas, donde se ve el resultado: armar, reparar, cultivar, cocinar, moverte.",ideas:["Tecnicatura en reparación de PC","Viverismo, huerta o jardinería","Ayudante de cocina","Asistencia veterinaria"]},
+  I:{name:"Investigar",short:"Entender y resolver",desc:"Disfrutás pensar, analizar y descubrir cómo funcionan las cosas. Te gustan los problemas con lógica.",ideas:["Programación","Análisis de datos","Asistente de laboratorio","Carreras de ciencias"]},
+  A:{name:"Crear",short:"Crear y expresar",desc:"Te motiva crear algo propio: imágenes, historias, música, objetos o mundos. Necesitás espacio para la imaginación.",ideas:["Diseño gráfico","Ilustración digital","Fotografía o edición de video","Escritura creativa"]},
+  S:{name:"Ayudar",short:"Acompañar y enseñar",desc:"Te sale natural explicar, escuchar y ayudar. Te hace bien sentir que tu trabajo sirve a otras personas.",ideas:["Apoyo escolar","Acompañamiento terapéutico","Talleres para chicos","Atención al público"]},
+  E:{name:"Emprender",short:"Proponer y mover",desc:"Te entusiasma llevar adelante ideas, convencer y organizar a otros hacia una meta.",ideas:["Emprendimiento propio","Marketing en redes","Ventas","Organización de eventos"]},
+  C:{name:"Organizar",short:"Ordenar con precisión",desc:"Te gustan las tareas claras, ordenadas y detallistas. Encontrar errores te resulta satisfactorio.",ideas:["Administración","Asistente contable","Carga y control de datos","Corrección de textos"]}
 };
 const ORDER=["R","I","A","S","E","C"];
 
@@ -170,18 +170,18 @@ const GAME_ITEMS=Object.keys(ROLES).map(k=>({id:"g-"+k,t:ROLES[k].item,role:k}))
 
 /* Temas de interés, con caminos por tipo */
 const THEMES={
-  tec:{n:"Tecnología",s:"Computadoras, programas, internet",p:[["I","Programación o desarrollo web"],["I","Análisis de datos"],["R","Técnica en reparación de PC y redes"],["C","Soporte técnico o mesa de ayuda"],["A","Diseño de apps y páginas (UX/UI)"],["S","Capacitación en herramientas digitales"],["E","Venta de productos tecnológicos"]]},
+  tec:{n:"Tecnología",s:"Computadoras, programas, internet",p:[["I","Programación o desarrollo web"],["I","Análisis de datos"],["R","Tecnicatura en reparación de PC y redes"],["C","Soporte técnico o mesa de ayuda"],["A","Diseño de apps y páginas (UX/UI)"],["S","Capacitación en herramientas digitales"],["E","Venta de productos tecnológicos"]]},
   juegos:{n:"Videojuegos",s:"Crear, probar o jugar",p:[["I","Programación de videojuegos"],["A","Arte para videojuegos"],["A","Narrativa para juegos"],["C","Testing de videojuegos (QA)"],["S","Moderación de comunidades de jugadores"],["E","Producción de juegos indie"],["R","Armado de PC gamer"]]},
-  nat:{n:"Naturaleza y animales",s:"Plantas, campo, ambiente",p:[["R","Viverismo, huerta o jardinería"],["R","Asistente veterinaria"],["I","Técnica en laboratorio ambiental"],["S","Educación ambiental o guía en reservas"],["E","Emprendimiento de plantas o productos naturales"],["C","Administración en un vivero o campo"]]},
-  salud:{n:"Salud y bienestar",s:"Cuidar a otras personas",p:[["S","Acompañamiento terapéutico"],["S","Enfermería"],["I","Técnica en laboratorio clínico"],["R","Instructora de actividad física"],["C","Recepción y administración en consultorios"],["A","Musicoterapia o arteterapia"]]},
+  nat:{n:"Naturaleza y animales",s:"Plantas, campo, ambiente",p:[["R","Viverismo, huerta o jardinería"],["R","Asistencia veterinaria"],["I","Tecnicatura en laboratorio ambiental"],["S","Educación ambiental o guía en reservas"],["E","Emprendimiento de plantas o productos naturales"],["C","Administración en un vivero o campo"]]},
+  salud:{n:"Salud y bienestar",s:"Cuidar a otras personas",p:[["S","Acompañamiento terapéutico"],["S","Enfermería"],["I","Tecnicatura en laboratorio clínico"],["R","Instructorado de actividad física"],["C","Recepción y administración en consultorios"],["A","Musicoterapia o arteterapia"]]},
   arte:{n:"Arte y diseño",s:"Dibujo, foto, manualidades",p:[["A","Diseño gráfico"],["A","Ilustración digital"],["A","Fotografía"],["R","Artesanías o cerámica"],["E","Venta de arte o diseños online"],["C","Maquetación de publicaciones"],["S","Talleres de arte para chicos"]]},
-  musica:{n:"Música y audio",s:"Tocar, producir, escuchar",p:[["A","Producción musical"],["R","Técnica de sonido"],["S","Enseñanza de música"],["E","Gestión de artistas o eventos"],["I","Edición de audio y podcasts"],["C","Organización de estudios o salas"]]},
+  musica:{n:"Música y audio",s:"Tocar, producir, escuchar",p:[["A","Producción musical"],["R","Tecnicatura en sonido"],["S","Enseñanza de música"],["E","Gestión de artistas o eventos"],["I","Edición de audio y podcasts"],["C","Organización de estudios o salas"]]},
   edu:{n:"Educación",s:"Enseñar y aprender",p:[["S","Apoyo escolar"],["S","Profesorado"],["I","Tutoría de matemática o ciencias"],["A","Creación de materiales didácticos"],["C","Secretaría o preceptoría escolar"],["E","Coordinación de talleres"]]},
-  negocios:{n:"Negocios y dinero",s:"Vender, administrar, emprender",p:[["E","Emprendimiento propio"],["E","Ventas y atención comercial"],["C","Asistente contable o administrativa"],["I","Análisis financiero"],["S","Recursos humanos"],["A","Marketing creativo"]]},
+  negocios:{n:"Negocios y dinero",s:"Vender, administrar, emprender",p:[["E","Emprendimiento propio"],["E","Ventas y atención comercial"],["C","Asistencia contable o administrativa"],["I","Análisis financiero"],["S","Recursos humanos"],["A","Marketing creativo"]]},
   comunic:{n:"Comunicación y redes",s:"Contenido, prensa, redes",p:[["A","Creación de contenido"],["E","Marketing en redes sociales"],["S","Community manager"],["I","Periodismo"],["C","Corrección de textos"],["R","Producción audiovisual"]]},
   cocina:{n:"Gastronomía",s:"Cocinar y servir",p:[["R","Ayudante de cocina"],["A","Pastelería creativa"],["E","Emprendimiento de comidas"],["S","Atención en cafetería"],["C","Control de stock en cocina"],["I","Nutrición o bromatología"]]},
-  deporte:{n:"Deporte y movimiento",s:"Entrenar, jugar, enseñar",p:[["R","Instructora de gimnasio"],["S","Profesorado de educación física"],["E","Organización de torneos"],["I","Preparación física"],["C","Administración de un club"],["A","Danza"]]},
-  ciencia:{n:"Ciencia",s:"Investigar y experimentar",p:[["I","Asistente de laboratorio"],["I","Carreras de ciencias (biología, química, física)"],["R","Técnica química"],["C","Control de calidad"],["S","Divulgación científica"],["A","Ilustración científica"]]},
+  deporte:{n:"Deporte y movimiento",s:"Entrenar, jugar, enseñar",p:[["R","Instructorado de gimnasio"],["S","Profesorado de educación física"],["E","Organización de torneos"],["I","Preparación física"],["C","Administración de un club"],["A","Danza"]]},
+  ciencia:{n:"Ciencia",s:"Investigar y experimentar",p:[["I","Asistente de laboratorio"],["I","Carreras de ciencias (biología, química, física)"],["R","Tecnicatura en química"],["C","Control de calidad"],["S","Divulgación científica"],["A","Ilustración científica"]]},
   moda:{n:"Moda y estética",s:"Ropa, imagen, belleza",p:[["A","Diseño de indumentaria"],["R","Costura y confección"],["S","Peluquería o maquillaje"],["E","Venta de ropa online"],["C","Producción y stock textil"],["I","Asesoría de imagen"]]},
   social:{n:"Ayuda y comunidad",s:"ONG, voluntariado",p:[["S","Voluntariado o trabajo en ONG"],["S","Acompañamiento a personas mayores"],["I","Psicología o trabajo social"],["E","Coordinación de proyectos comunitarios"],["C","Administración en una ONG"],["R","Mantenimiento en organizaciones"]]}
 };
@@ -405,7 +405,7 @@ function vResult(st,isSample){
   <div class="card stack fade" style="text-align:center">
     <p class="eyebrow">Tu código vocacional</p>
     <div class="code" aria-label="Código ${r.code.join("")}">${r.code.map(t=>`<span>${t}</span>`).join("")}</div>
-    <h2>${top.map(t=>t.name).join(" · ")}</h2>
+    <h2>${top.map(t=>t.name).join(" · ")}</h2><p class="muted" style="font-size:.9rem">Lo que más te atrae hacer, en orden.</p>
     <p class="muted">Listo${nm}. Tus intereses más fuertes son <b>${top[0].short.toLowerCase()}</b> y <b>${top[1].short.toLowerCase()}</b>. No es una etiqueta fija: muestra hacia dónde apunta tu brújula hoy.</p>
     ${radar(r.pct)}
   </div>
